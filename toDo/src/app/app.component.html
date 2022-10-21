@@ -1,0 +1,25 @@
+<h1>{{ title }}</h1>
+<ul>
+  <li *ngFor="let toDo of toDos">
+    {{ toDo.id }}. {{ toDo.title }} -
+    <button *ngIf="!toDo.done" (click)="markAsDone(toDo)">CONCLUIR</button> |
+    <button *ngIf="toDo.done" (click)="markAsUndone(toDo)">REFAZER</button> |
+    <button (click)="remove(toDo)">REMOVER</button>
+  </li>
+</ul>
+
+<form [formGroup]="form">
+  <fieldset>
+    <label>Tarefa: </label>
+    <input
+      type="text"
+      placeholder="Título da tarefa"
+      maxlength="60"
+      formControlName="title"
+    />
+    <small *ngIf="form.controls.title.invalid && !form.controls.title.pristine"
+      >Este campo deve conter entre 3 e 60 caracteres</small
+    >
+    <button>Salvar</button>
+  </fieldset>
+</form>
