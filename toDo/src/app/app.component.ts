@@ -8,6 +8,7 @@ import { toDO } from 'src/models/models';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  public mode = 'list';
   public toDos: toDO[] = [];
   public title: string = "Lista de tarefas";
   public form: FormGroup;
@@ -20,9 +21,20 @@ export class AppComponent {
         Validators.required
       ])]
     });
-    this.toDos.push(new toDO(1, 'Passear com o cachorro', false));
-    this.toDos.push(new toDO(2, 'Recolher a roupa', false));
-    this.toDos.push(new toDO(3,'Lavar a louça', true));
+
+    this.load();
+  }
+
+  add() {
+    const title = this.form.controls['title'].value;
+    const id = this.toDos.length + 1;
+    this.toDos.push(new toDO(id, title, false));
+    this.save();
+    this.clear();
+  }
+
+  clear() {
+    this.form.reset();
   }
 
   remove(todo: toDO) {
@@ -30,15 +42,33 @@ export class AppComponent {
     if (index !== -1) {
       this.toDos.splice(index, 1);
     }
+    this.save();
 
   }
 
   markAsDone(todo: toDO) {
     todo.done = true;
+    this.save();
   }
 
   markAsUndone(todo: toDO) {
     todo.done = false;
+    this.save();
+  }
+
+  save() {
+    const data = JSON.stringify(this.toDos);
+    localStorage.setItem('toDos', data);
+    this.mode = 'list';
+  }
+
+  load() {
+    const data = localStorage.getItem('toDos');
+    this.toDos = JSON.parse(data!);
+  }
+
+  changeMode(mode: string) {
+    this.mode = mode;
   }
 }
 
